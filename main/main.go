@@ -92,7 +92,9 @@ func sendDNSQuery(server string, query []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close() // 0
+	// Ensures that the connection is closed when the function completes, 
+	// whether it succeeds or fails.
+	defer conn.Close() 
 	
 	_, err = conn.Write(query)
 	if err != nil {
