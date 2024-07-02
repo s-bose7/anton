@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 import "fmt"
+import "net"
 import "bytes"
 
 import "encoding/binary"
@@ -85,6 +86,29 @@ func buildDNSQuery(domain []byte) ([]byte, error) {
 }
 
 
+
+func sendDNSQuery(server string, query []byte) ([]byte, error) {
+	conn, err := net.Dial("udp", server)
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close() // 0
+	
+	_, err = conn.Write(query)
+	if err != nil {
+		return nil, err
+	}
+	// Buffer to store the response
+	response := make([]byte, 512)
+	n, err := conn.Read(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response[:n], nil
+}
+
+
 func main() {
 
 	domain := "dns.google.com"
@@ -101,5 +125,20 @@ func main() {
 
 	// Print the DNS Query in a readable format
 	printByteSlice("DNS Query:", query)
+
+	// Send the query to the DNS server and get the response
+	server := "8.8.8.8:53"
+	response, err := sendDNSQuery(server, query)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	// Print the DNS response in a readable format
+	printByteSlice("DNS Response: ", response)
+
+	// Parse the response
+
+	fmt.Println("DNS query sent and response received successfully")
 
 }
