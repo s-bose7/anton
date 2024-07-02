@@ -25,6 +25,9 @@ SOFTWARE.
 import "fmt"
 import "bytes"
 
+import "encoding/binary"
+import "resolve-on-go/lib"
+
 
 // Encodes a domain name into the DNS wire format.
 func encodeDNSName(name string) []byte {
@@ -50,11 +53,53 @@ func printByteSlice(name string, b []byte) {
 	fmt.Println()
 }
 
+
+func buildDNSQuery(domain []byte) ([]byte, error) {
+	var query bytes.Buffer
+
+	message := lib.DNSMessage{
+		Header : lib.DNSHeader {
+			ID: 1,
+			Flags: lib.RD,
+			QDCount: 1,
+			ANCount: 0,
+			NSCount: 0,
+			ARCount: 0,
+		},
+		Question : lib.DNSQuestion {
+			QName: domain,
+			QType: 1,
+			QClass: 1,
+		},
+	}
+
+	// Write header
+	binary.Write(&query, binary.BigEndian, message.Header)
+
+	// Write question
+	query.Write(message.Question.QName)
+	binary.Write(&query, binary.BigEndian, message.Question.QType)
+	binary.Write(&query, binary.BigEndian, message.Question.QClass)
+
+	return query.Bytes(), nil
+}
+
+
 func main() {
 
 	domain := "dns.google.com"
 	fmt.Println("Provided domain: ", domain)
 	encodedName := encodeDNSName(domain)
 	printByteSlice("Encoded domain:", encodedName)
-	
+
+	// Build the DNS Query
+	query, err := buildDNSQuery(encodedName)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	// Print the DNS Query in a readable format
+	printByteSlice("DNS Query:", query)
+
 }
