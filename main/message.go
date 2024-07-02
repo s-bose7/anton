@@ -39,12 +39,13 @@ type DNSQuestion struct {
 }
 
 type DNSResourceRecord struct {
-	Name     []byte
-	Type     uint16
-	Class    uint16
-	TTL      uint32
-	RDLength uint16
-	RData    []byte
+	Name     []byte    // A domain name to which this resource record pertains.
+	Type     uint16    // This field specifies the meaning of the data in the RDATA field. 
+	Class    uint16    // The class of the data in the RDATA field.
+	TTL      uint32    // The time interval (in seconds) that the resource record may be cached 
+					   // before it should be discarded. 
+	RDLength uint16    // Specifies the length in octets of the RDATA field.
+	RData    []byte    // A a variable length string of octets that describes the resource.
 }
 
 /*     
