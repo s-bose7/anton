@@ -1,8 +1,8 @@
-package lib
+package core
 
 import "bytes"
 
-func encodeString(domain string) []byte {
+func encodeToByteArray(domain string) []byte {
 	var buf bytes.Buffer
 	for _, label := range bytes.Split([]byte(domain), []byte(".")) {
 		buf.WriteByte(byte(len(label)))
@@ -12,7 +12,7 @@ func encodeString(domain string) []byte {
 	return buf.Bytes()
 }
 
-func decodeString(encoded []byte) (string, error) {
+func decodeToString(encoded []byte) (string, error) {
 	var domain bytes.Buffer
 	reader := bytes.NewReader(encoded)
 

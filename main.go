@@ -36,7 +36,7 @@ func main() {
 		util.PrintStackTrace("Error building query: ", err)
 		return
 	}
-	util.PrintBytes("Encoded DNS Message:", query)
+	util.PrintRaw("Encoded DNS Message:", query)
 	
 	server := "8.8.8.8:53"
 	response, err := dns.Query(server, query)
@@ -44,15 +44,13 @@ func main() {
 		util.PrintStackTrace("Error Querying Google's DNS server: ", err)
 		return
 	}
-	util.PrintBytes("\nGoogle's DNS server response:", response)
+	util.PrintRaw("\nGoogle's DNS server response:", response)
 	
-	resolvedMessage, err := dns.DecodeResponse(response)
+	resolvedMessage, err := dns.ParseResponse(response)
 	if err != nil {
 		util.PrintStackTrace("Error parsing response: ", err)
 		return
 	}
-
-	resolvedMessage.Header.PrintHeader()
-	resolvedMessage.Question.PrintQuestion()
+	resolvedMessage.Print()
 }
 

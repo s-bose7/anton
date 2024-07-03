@@ -1,4 +1,4 @@
-package lib
+package core
 
 import (
 	"fmt"
@@ -13,6 +13,9 @@ type DNSQuestion struct {
 	Class uint16 		// The class of the query.
 }
 
+var (
+	sizeOfDomainBytes = 0
+)
 
 func (q *DNSQuestion) Encode() ([]byte, error) {
 	buf := new(bytes.Buffer)
@@ -29,33 +32,19 @@ func DecodeQuestion(data []byte) (DNSQuestion, error) {
 	reader := bytes.NewReader(data)
 
 	// Decode the domain name
-	var name []byte
-	for {
-		length, err := reader.ReadByte()
-		if err != nil {
-			return question, err
-		}
-		if length == 0 {
-			break
-		}
-
-		label := make([]byte, length)
-		if _, err := reader.Read(label); err != nil {
-			return question, err
-		}
-		name = append(name, length)
-		name = append(name, label...)
+	name := make([]byte, sizeOfDomainBytes)
+	n, err := reader.Read(name)
+	if err != nil {
+		return DNSQuestion{}, fmt.Errorf("failed to read domain name: %w", err)
 	}
-	name = append(name, 0) // Append the null byte at the end of the name
-	question.Name = name
-
+	question.Name = name[:n]
 	// Decode the type
 	if err := binary.Read(reader, binary.BigEndian, &question.Type); err != nil {
-		return question, err
+		return question, fmt.Errorf("failed to read question type: %w", err)
 	}
 	// Decode the class
 	if err := binary.Read(reader, binary.BigEndian, &question.Class); err != nil {
-		return question, err
+		return question, fmt.Errorf("failed to read question class: %w", err)
 	}
 
 	return question, nil
@@ -63,17 +52,18 @@ func DecodeQuestion(data []byte) (DNSQuestion, error) {
 
 
 func NewDNSQuestion(domain string) DNSQuestion {
-	encodedDomain := encodeString(domain)
+	encodedDomain := encodeToByteArray(domain)
+	sizeOfDomainBytes = len(encodedDomain)
 	return DNSQuestion{
 		Name:  encodedDomain,
 		Type:  1, // IPv4
-		Class: 1, 
+		Class: 1, // 'IN'
 	}
 }
 
 func (question *DNSQuestion) PrintQuestion() {
 	fmt.Print("\n")
-	name, err := decodeString(question.Name)
+	name, err := decodeToString(question.Name)
 	if err != nil {
 		return
 	}

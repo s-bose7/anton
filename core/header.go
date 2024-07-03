@@ -1,4 +1,4 @@
-package lib
+package core
 
 import (
 	"fmt"
@@ -26,6 +26,9 @@ const (
 	RCODE_NAME_ERROR = 3
 	RCODE_NOT_IMPLEMENTED = 4
 	RCODE_REFUSED = 5
+
+	// Memory In Bytes
+	SIZE_H = 12 
 )
 
 type DNSHeader struct {
