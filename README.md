@@ -1,13 +1,8 @@
 # resolve-on-go
 A DNS resolver from scratch.
 
-
-
-// Take input of domain names from file/cli
-
-// decoding answer and rest
-
-// Resolve
-// Stats
-// README
-
+Input domain names from file/CLI  
+Decoding answer and rest of the fields  
+Resolve any hosts   
+Show stats  
+README  
