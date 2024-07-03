@@ -2,7 +2,7 @@ package lib
 
 import "bytes"
 
-func EncodeString(domain string) []byte {
+func encodeString(domain string) []byte {
 	var buf bytes.Buffer
 	for _, label := range bytes.Split([]byte(domain), []byte(".")) {
 		buf.WriteByte(byte(len(label)))
@@ -12,7 +12,7 @@ func EncodeString(domain string) []byte {
 	return buf.Bytes()
 }
 
-func DecodeString(encoded []byte) (string, error) {
+func decodeString(encoded []byte) (string, error) {
 	var domain bytes.Buffer
 	reader := bytes.NewReader(encoded)
 

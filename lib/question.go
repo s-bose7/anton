@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"bytes"
  	"encoding/binary"
 )
@@ -62,10 +63,21 @@ func DecodeQuestion(data []byte) (DNSQuestion, error) {
 
 
 func NewDNSQuestion(domain string) DNSQuestion {
-	encodedDomain := EncodeString(domain)
+	encodedDomain := encodeString(domain)
 	return DNSQuestion{
 		Name:  encodedDomain,
 		Type:  1, // IPv4
 		Class: 1, 
 	}
+}
+
+func (question *DNSQuestion) PrintQuestion() {
+	fmt.Print("\n")
+	name, err := decodeString(question.Name)
+	if err != nil {
+		return
+	}
+	fmt.Println("Name:", name)
+	fmt.Printf("Type: %d\n",  question.Type)
+	fmt.Printf("Class: %d\n", question.Class)
 }

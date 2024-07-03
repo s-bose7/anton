@@ -23,32 +23,9 @@ SOFTWARE.
 */
 
 import (
-	"fmt"
 	"resolve-on-go/util"
 	"resolve-on-go/dns"
-	. "resolve-on-go/lib"
 )
-
-func printHeader(dnsHeader DNSHeader) {
-	fmt.Print("\n")
-	fmt.Printf("Id:      %d\n", dnsHeader.Id)
-	fmt.Printf("Flag:    %d\n", dnsHeader.Flags)
-	fmt.Printf("QdCount: %d\n", dnsHeader.QdCount)
-	fmt.Printf("AnCount: %d\n", dnsHeader.AnCount)
-	fmt.Printf("NsCount: %d\n", dnsHeader.NsCount)
-	fmt.Printf("ArCount: %d\n", dnsHeader.ArCount)
-}
-
-func printQuestion(dnsQuestion DNSQuestion) {
-	fmt.Print("\n")
-	name, err := DecodeString(dnsQuestion.Name)
-	if err != nil {
-		return
-	}
-	fmt.Println("Name:", name)
-	fmt.Printf("Type: %d\n", dnsQuestion.Type)
-	fmt.Printf("Class: %d\n", dnsQuestion.Class)
-}
 
 func main() {
 
@@ -69,13 +46,13 @@ func main() {
 	}
 	util.PrintBytes("\nGoogle's DNS server response:", response)
 	
-	resolvedMessage, err := DecodeResponse(response)
+	resolvedMessage, err := dns.DecodeResponse(response)
 	if err != nil {
 		util.PrintStackTrace("Error parsing response: ", err)
 		return
 	}
 
-	printHeader(resolvedMessage.Header)
-	printQuestion(resolvedMessage.Question)
+	resolvedMessage.Header.PrintHeader()
+	resolvedMessage.Question.PrintQuestion()
 }
 

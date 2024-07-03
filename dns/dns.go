@@ -20,3 +20,7 @@ func BuildMessage(domain string) ([]byte, error) {
 func Query(server string, query []byte) ([]byte, error){
 	return core.QueryNameServer(server, query)
 }
+
+func DecodeResponse(response []byte) (DNSMessage, error) {
+	return Decode(response)
+}

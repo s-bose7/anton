@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"bytes"
  	"encoding/binary"
 )
@@ -80,4 +81,15 @@ func NewDNSHeader() DNSHeader {
 	}
 	header.setFlags(QR_QUERY, OPCODE_QUERY, RD)
 	return header
+}
+
+
+func (header *DNSHeader) PrintHeader() {
+	fmt.Print("\n")
+	fmt.Printf("Id:      %d\n", header.Id)
+	fmt.Printf("Flag:    %d\n", header.Flags)
+	fmt.Printf("QdCount: %d\n", header.QdCount)
+	fmt.Printf("AnCount: %d\n", header.AnCount)
+	fmt.Printf("NsCount: %d\n", header.NsCount)
+	fmt.Printf("ArCount: %d\n", header.ArCount)
 }

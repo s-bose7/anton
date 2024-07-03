@@ -36,7 +36,7 @@ func (m *DNSMessage) Encode() ([]byte, error) {
 	return message, nil
 }
 
-func DecodeResponse(response []byte) (DNSMessage, error) {
+func Decode(response []byte) (DNSMessage, error) {
 	header := DecodeHeader(response[:12])
 	question, err := DecodeQuestion(response[12:34])
 	if err != nil {
