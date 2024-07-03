@@ -26,10 +26,10 @@ import (
 	"fmt"
 	"resolve-on-go/util"
 	"resolve-on-go/dns"
-	"resolve-on-go/lib"
+	. "resolve-on-go/lib"
 )
 
-func printHeader(dnsHeader lib.DNSHeader) {
+func printHeader(dnsHeader DNSHeader) {
 	fmt.Print("\n")
 	fmt.Printf("Id:      %d\n", dnsHeader.Id)
 	fmt.Printf("Flag:    %d\n", dnsHeader.Flags)
@@ -39,7 +39,7 @@ func printHeader(dnsHeader lib.DNSHeader) {
 	fmt.Printf("ArCount: %d\n", dnsHeader.ArCount)
 }
 
-func printQuestion(dnsQuestion lib.DNSQuestion) {
+func printQuestion(dnsQuestion DNSQuestion) {
 	fmt.Print("\n")
 	name, err := util.DecodeString(dnsQuestion.Name)
 	if err != nil {
@@ -69,7 +69,7 @@ func main() {
 	}
 	util.PrintBytes("\nGoogle's DNS server response:", response)
 	
-	resolvedMessage, err := lib.DecodeResponse(response)
+	resolvedMessage, err := DecodeResponse(response)
 	if err != nil {
 		util.PrintStackTrace("Error parsing response: ", err)
 		return
