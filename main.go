@@ -41,7 +41,7 @@ func printHeader(dnsHeader DNSHeader) {
 
 func printQuestion(dnsQuestion DNSQuestion) {
 	fmt.Print("\n")
-	name, err := util.DecodeString(dnsQuestion.Name)
+	name, err := DecodeString(dnsQuestion.Name)
 	if err != nil {
 		return
 	}

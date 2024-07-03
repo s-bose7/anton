@@ -3,7 +3,6 @@ package lib
 import (
 	"bytes"
  	"encoding/binary"
-	"resolve-on-go/util"
 )
 
 
@@ -63,7 +62,7 @@ func DecodeQuestion(data []byte) (DNSQuestion, error) {
 
 
 func NewDNSQuestion(domain string) DNSQuestion {
-	encodedDomain := util.EncodeString(domain)
+	encodedDomain := EncodeString(domain)
 	return DNSQuestion{
 		Name:  encodedDomain,
 		Type:  1, // IPv4
